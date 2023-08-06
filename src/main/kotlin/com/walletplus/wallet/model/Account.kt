@@ -7,6 +7,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 
+@Entity
 data class Account(
         @Id
         @GeneratedValue(generator = "UUID")
@@ -21,5 +22,10 @@ data class Account(
         @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
         @JoinColumn(name="customer_id")
         val customer:Customer?,
+
+        @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+        val transaction:Set<Transaction>?=null
         ) {
+
+
 }
