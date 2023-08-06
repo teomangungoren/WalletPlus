@@ -3,6 +3,7 @@ package com.walletplus.wallet.service
 import com.walletplus.wallet.dto.AccountDto
 import com.walletplus.wallet.dto.CreateAccountRequest
 import com.walletplus.wallet.dto.CustomerDto
+import com.walletplus.wallet.exception.AccountNotFoundException
 import com.walletplus.wallet.model.Account
 import com.walletplus.wallet.repository.AccountRepository
 import org.springframework.stereotype.Service
@@ -20,7 +21,8 @@ class AccountService(private val accountRepository: AccountRepository,private va
     }
 
     fun findAccountById(id:String):Account?{
-        return accountRepository.findAccountById(id)
+        return accountRepository.findAccountById(id)?:
+        throw AccountNotFoundException("$id id'ye sahip kullanıcı bulunamadı");
     }
 
     fun createAccount(createAccountRequest: CreateAccountRequest):AccountDto{

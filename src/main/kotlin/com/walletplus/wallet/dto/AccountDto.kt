@@ -11,6 +11,7 @@ data class AccountDto(
         val currency:Currency?,
         val createdDate:LocalDateTime?,
         val customerTc:String?,
+
 ){
     companion object{
         @JvmStatic
