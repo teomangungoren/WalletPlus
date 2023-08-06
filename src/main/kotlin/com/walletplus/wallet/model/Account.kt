@@ -13,7 +13,7 @@ data class Account(
         @GeneratedValue(generator = "UUID")
         @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
         val id:String?="",
-        val balance:BigDecimal?= BigDecimal.ZERO,
+        var balance:BigDecimal?= BigDecimal.ZERO,
         @Enumerated(EnumType.STRING)
         val currency:Currency?=Currency.TRY,
         @JsonFormat(pattern = "yyyy-MM-dd")
@@ -24,7 +24,7 @@ data class Account(
         val customer:Customer?,
 
         @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-        val transaction:Set<Transaction>?=null
+        val transaction:Set<Transaction>?
         ) {
 
 

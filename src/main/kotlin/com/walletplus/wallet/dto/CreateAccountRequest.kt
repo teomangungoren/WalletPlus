@@ -7,6 +7,4 @@ data class CreateAccountRequest(
         val customerTc:String,
         val balance:BigDecimal,
         val currency:Currency
-
-
 )

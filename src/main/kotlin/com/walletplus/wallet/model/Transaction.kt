@@ -25,7 +25,7 @@ data class Transaction(
         @JoinColumn(name="account_id", nullable = false)
         val account:Account
 ){
-    constructor(amount:BigDecimal,transactionDate: LocalDateTime,account: Account):this(
+    constructor(amount: BigDecimal?, transactionDate: LocalDateTime, account: Account):this(
             id=null,
             amount,
             transactionDate,

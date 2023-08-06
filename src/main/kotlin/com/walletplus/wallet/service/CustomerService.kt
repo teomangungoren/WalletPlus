@@ -2,6 +2,7 @@ package com.walletplus.wallet.service
 
 import com.walletplus.wallet.dto.CreateCustomerRequest
 import com.walletplus.wallet.dto.CustomerDto
+import com.walletplus.wallet.exception.CustomerNotFoundException
 import com.walletplus.wallet.model.Customer
 import com.walletplus.wallet.repository.CustomerRepository
 import org.springframework.stereotype.Service

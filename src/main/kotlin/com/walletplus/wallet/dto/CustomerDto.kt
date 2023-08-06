@@ -13,14 +13,12 @@ data class CustomerDto(
         val city:City?,
         val phoneNumber:String?,
         val createdDate:LocalDateTime?,
-        val account:AccountDto?
+        val accountId:String?=null,
 ){
 
-    constructor():this(null,null,null,null,null,null,null,null,null)
     companion object{
         @JvmStatic
         fun convert(from:Customer):CustomerDto{
-            val accountDto=from.account?.let { AccountDto.convert(it) }?:AccountDto()
             return CustomerDto(
 
                     from.id,
@@ -31,7 +29,8 @@ data class CustomerDto(
                     from.city,
                     from.phoneNumber,
                     from.createdDate,
-                    accountDto
+                    from.account?.id
+
             )
         }
     }
