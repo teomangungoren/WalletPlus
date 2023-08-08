@@ -5,6 +5,7 @@ import com.walletplus.wallet.dto.TransactionDto
 import com.walletplus.wallet.model.Transaction
 import com.walletplus.wallet.repository.AccountRepository
 import com.walletplus.wallet.repository.TransactionRepository
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -13,7 +14,8 @@ import java.util.stream.Collectors
 @Service
 class TransactionService(private val transactionRepository: TransactionRepository,
                          private val accountService: AccountService,
-                         private val accountRepository: AccountRepository) {
+                         private val accountRepository: AccountRepository,
+                         private val kafkaTemplate: KafkaTemplate<String,String>) {
 
     @Transactional(readOnly = false, timeout = 5)
     fun transferMoney(createTransactionRequest: CreateTransactionRequest): TransactionDto? {
@@ -25,6 +27,10 @@ class TransactionService(private val transactionRepository: TransactionRepositor
                 sender.balance=sender.balance!!.subtract(createTransactionRequest.amount);
                 receiver.balance=receiver.balance!!.add(createTransactionRequest.amount);
 
+                val notificationMessage="Dear customer %s \n Your money transfer request has been succeed.";
+                val senderMessage=String.format(notificationMessage,sender.id,sender.balance);
+                kafkaTemplate.send("transfer-notification",senderMessage);
+
                 accountRepository.save(sender);
                 accountRepository.save(receiver);
 
@@ -33,7 +39,9 @@ class TransactionService(private val transactionRepository: TransactionRepositor
                         LocalDateTime.now(),
                         sender
                 )
+
                 transactionRepository.save(transaction);
+
                 return TransactionDto.convert(transaction);
 
             }
