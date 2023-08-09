@@ -14,8 +14,7 @@ import java.util.stream.Collectors
 @Service
 class TransactionService(private val transactionRepository: TransactionRepository,
                          private val accountService: AccountService,
-                         private val accountRepository: AccountRepository,
-                         private val kafkaTemplate: KafkaTemplate<String,String>) {
+                         private val accountRepository: AccountRepository, ) {
 
     @Transactional(readOnly = false, timeout = 5)
     fun transferMoney(createTransactionRequest: CreateTransactionRequest): TransactionDto? {
@@ -26,10 +25,6 @@ class TransactionService(private val transactionRepository: TransactionRepositor
             if(sender.balance!!>=createTransactionRequest.amount){
                 sender.balance=sender.balance!!.subtract(createTransactionRequest.amount);
                 receiver.balance=receiver.balance!!.add(createTransactionRequest.amount);
-
-                val notificationMessage="Dear customer %s \n Your money transfer request has been succeed.";
-                val senderMessage=String.format(notificationMessage,sender.id,sender.balance);
-                kafkaTemplate.send("transfer-notification",senderMessage);
 
                 accountRepository.save(sender);
                 accountRepository.save(receiver);
